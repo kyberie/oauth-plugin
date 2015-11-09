@@ -34,15 +34,15 @@ module OAuth
 
       def token
         @client_application = ClientApplication.where(:key => params[:client_id]).first
-        if @client_application.secret != params[:client_secret]
+        if @client_application.secret != params[:client_secret].to_s
           oauth2_error "invalid_client"
           return
         end
         # older drafts used none for client_credentials
         params[:grant_type] = 'client_credentials' if params[:grant_type] == 'none'
-        logger.info "grant_type=#{params[:grant_type]}"
+        logger.info "grant_type=#{params[:grant_type].to_s}"
         if ["authorization_code", "password", "client_credentials"].include?(params[:grant_type])
-          send "oauth2_token_#{params[:grant_type].underscore}"
+          send "oauth2_token_#{params[:grant_type].to_s.underscore}"
         else
           oauth2_error "unsupported_grant_type"
         end
@@ -54,21 +54,21 @@ module OAuth
 
       def authorize
         if params[:oauth_token]
-          @token = ::RequestToken.where(:token => params[:oauth_token]).first
+          @token = ::RequestToken.where(:token => params[:oauth_token].to_s).first
           oauth1_authorize
         else
           if request.post?
             @authorizer = OAuth::Provider::Authorizer.new current_user, user_authorizes_token?, params
             redirect_to @authorizer.redirect_uri
           else
-            @client_application = ClientApplication.where(:key => params[:client_id]).first
+            @client_application = ClientApplication.where(:key => params[:client_id].to_s).first
             render :action => "oauth2_authorize"
           end
         end
       end
 
       def revoke
-        @token = current_user.tokens.where(:token => params[:token]).first
+        @token = current_user.tokens.where(:token => params[:token].to_s).first
         if @token
           @token.invalidate!
           flash[:notice] = "You've revoked the token for #{@token.client_application.name}"
