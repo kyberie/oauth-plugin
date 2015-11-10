@@ -12,7 +12,7 @@ module OAuth
       end
 
       def app
-        @app ||= ::ClientApplication.where(:key => params[:client_id]).first
+        @app ||= ::ClientApplication.where(:key => params[:client_id].to_s).first
       end
 
       def code
