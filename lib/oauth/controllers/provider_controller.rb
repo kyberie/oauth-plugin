@@ -144,7 +144,7 @@ module OAuth
         logger.info "[DEBUG] params: #{params}"
         logger.info "[DEBUG] params redirect: #{params[:redirect_uri]}"
         logger.info "[DEBUG] verification_code redirect: #{@verification_code.redirect_url}"
-        logger.info "[DEBUG] params redirect cleaned: #{params[:redirect_uri].to_s.gsub!(/\?.*/, '')}"
+        logger.info "[DEBUG] params redirect cleaned: #{params[:redirect_uri].to_s.gsub(/\?.*/, '')}"
         if @verification_code.redirect_url != params[:redirect_uri]
           oauth2_error
           return
