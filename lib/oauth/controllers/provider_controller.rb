@@ -137,10 +137,15 @@ module OAuth
           oauth2_error
           return
         end
-        
-        redirect_uri = params[:redirect_uri]
-        redirect_uri.gsub!(/\?.*/, '')
-        if @verification_code.redirect_url != redirect_uri
+
+        # redirect_uri = params[:redirect_uri]
+        # redirect_uri.gsub!(/\?.*/, '')
+        # if @verification_code.redirect_url != redirect_uri
+        logger.info "[DEBUG] params: #{params}"
+        logger.info "[DEBUG] params redirect: #{params[:redirect_uri]}"
+        logger.info "[DEBUG] verification_code redirect: #{@verification_code.redirect_url}"
+        logger.info "[DEBUG] params redirect cleaned: #{params[:redirect_uri].to_s.gsub!(/\?.*/, '')}"
+        if @verification_code.redirect_url != params[:redirect_uri]
           oauth2_error
           return
         end
