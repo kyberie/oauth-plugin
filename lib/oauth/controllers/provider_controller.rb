@@ -141,7 +141,7 @@ module OAuth
         # redirect_uri = params[:redirect_uri]
         # redirect_uri.gsub!(/\?.*/, '')
         # if @verification_code.redirect_url != redirect_uri
-        if @verification_code.redirect_url != params[:redirect_uri]
+        if !params[:redirect_uri].start_with?(@verification_code.redirect_url)
           oauth2_error
           return
         end
