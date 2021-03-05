@@ -147,6 +147,9 @@ module OAuth
         end
         @token = @verification_code.exchange!
         render :json=>@token
+      rescue Mongoid::Errors::Validations => ex
+        Rails.logger.error ex.message
+        render text: "Don't have access to application", status: 401
       end
 
       # http://tools.ietf.org/html/draft-ietf-oauth-v2-22#section-4.1.2
